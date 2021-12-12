@@ -82,7 +82,7 @@ Geometric interpretation
 
 The additional `connectivity` dataset is included because the vasculature is
 represented as a graph, unlike the neuron which is a tree. Thus, each section
-can have multiple `parents` and `children`. The dirctionality of the graph
+can have multiple `parents` and `children`. The directionality of the graph
 is decided by the columns in the `connectivity` dataset (column 1 to column 2).
 
 
@@ -256,4 +256,3 @@ the implicit index):
     9   10
     9   11
    === ===
-e
