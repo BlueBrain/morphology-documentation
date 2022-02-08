@@ -1,0 +1,16 @@
+{
+  "name": "morphology-documentation",
+  "version": "0.1.0",
+  "description": "vascpy",
+  "repository": {
+    "url": "https://github.com/BlueBrain/h5-vasc-graph"
+  },
+  "bugs": {
+    "url": "https://github.com/BlueBrain/h5-vasc-graph/issues"
+  },
+  "homepage": "https://github.com/BlueBrain/h5-vasc-graph",
+  "author": "bbp-ou-nse",
+  "contributors": ["BBP"],
+  "license": "Apache Liecense 2.0"
+}
+

@@ -1,0 +1,40 @@
+%YAML 1.1
+---
+$schema: "http://json-schema.org/draft-07/schema#"
+$id: "https://github.com/BlueBrain/h5-vasc-graph/schema.yml"
+type: object
+required:
+  - points
+  - structure
+  - connectivity
+
+properties:
+
+  points:
+    description: |
+      A 4 column data set composed of 32 bit floating point numbers representing morphology
+      :term:`points<point>`, which are the position and diameter at a :term:`cross section`. The
+      first three columns represent the X, Y, and Z positions and the last column represents the
+      diameter, all in micrometers. Implicit in the points dataset is an index, starting at 0, of
+      each point.
+    type: float32
+
+  structure: |
+
+    description: |
+        This dataset describes all the :term:`sections<section>` of the vasculature. It is composed
+        of 2 columns: start offset and type. Implicit in the structure dataset is an index, starting
+        at 0, of each :term:`section`.
+
+    type: float32
+
+  connectivity: |
+
+    description: |
+        This dataset describes the connectivity between all the sections described in the structure
+        dataset. It has 2 columns which refer to the implicit index of the sections which are
+        connected to each other. It implies that the last point in the section in column 1 is the
+        same as the first point in the section in column 2 (duplicating points at the boundary).
+        This dataset is sorted on the first column, and has a secondary sort on the second column.
+
+    type: float32
