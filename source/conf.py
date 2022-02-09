@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# circuit documentation build configuration file, created by
+# h5-morphology documentation build configuration file, created by
 # sphinx-quickstart on Mon Jun 29 10:27:08 2015.
 #
 # This file is execfile()d with the current directory set to its
@@ -12,37 +12,46 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-from pathlib import Path
-import json
 import sys
+import os
+import json
+
+local_path = os.path.dirname(os.path.abspath(__file__))
+
+with open(os.path.join(local_path, "../package.json")) as fp:
+    VERSION = json.load(fp)["version"]
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #sys.path.insert(0, os.path.abspath('.'))
 
-local_path = Path(__file__).parent
-package_json_path = local_path / '../package.json'
-sys.path.insert(0, str(local_path / 'extensions'))
-
-with open(package_json_path, encoding='utf-8') as fp:
-    package_json_info = json.load(fp)
-    VERSION = package_json_info['version']
-    PROJECT_NAME = package_json_info['name']
-
 # -- General configuration ------------------------------------------------
+
+# If your documentation needs a minimal Sphinx version, state it here.
+#needs_sphinx = '1.0'
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
     'sphinx.ext.todo',
-    'sphinx.ext.mathjax',
-    'sphinx-jsonschema',
 ]
 
+# Add any paths that contain templates here, relative to this directory.
+templates_path = ['_templates']
+
+# The suffix of source filenames.
+source_suffix = '.rst'
+
+# The encoding of source files.
+#source_encoding = 'utf-8-sig'
+
+# The master toctree document.
+master_doc = 'index'
+
 # General information about the project.
-project = PROJECT_NAME
+project = u'morphology-documentation'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -58,11 +67,15 @@ release = VERSION
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 html_theme = 'sphinx-bluebrain-theme'
+
+# Theme options are theme-specific and customize the look and feel of a theme
+# further.  For a list of options available for each theme, see the
+# documentation.
 html_theme_options = {'metadata_file': '../package.json'}
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
-html_title = 'Vasculature HDF5 Morphology Specification'
+html_title = 'Morphology Documentation'
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
@@ -71,6 +84,4 @@ html_static_path = ['_static']
 
 # If true, links to the reST sources are added to the pages.
 html_show_sourcelink = False
-
-todo_include_todos = True
 
