@@ -446,4 +446,3 @@ Producers
 
 .. _BBP: http://bluebrain.epfl.ch/
 .. _Neurolucida: http://www.mbfbioscience.com/neurolucida
-m
