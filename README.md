@@ -6,6 +6,14 @@ This repository contains the documentation of the morphology files formats used 
 To update the documentation, update the rst files located in the source directory.
 To update the version number, modify the "version" entry in package.json
 
+## Build the documentation
+
+To build the documentation clone this repository, and run the following command inside it
+
+```tox -e docs```
+
+The documentation is then available under `build/html/index.html`.
+
 Funding & Acknowledgements
 -------------------------
 
