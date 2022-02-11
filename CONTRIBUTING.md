@@ -105,7 +105,6 @@ the main (upstream) repository:
     git pull --ff upstream master
     ```
 
-[github]: https://github.com/BlueBrain/vascpy
 
 # Development Environment
 
@@ -138,3 +137,5 @@ The code coverage of the Python unit-tests may not decrease over time.
 It means that every change must go with their corresponding Python unit-tests to
 validate the library behavior as well as to demonstrate the API usage. 
 
+
+[github]: https://github.com/BlueBrain/morphology-documentation
