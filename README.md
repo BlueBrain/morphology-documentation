@@ -9,7 +9,7 @@ To update the version number, modify the "version" entry in package.json
 ## Documentation
 morphology-documentation is built and hosted on [readthedocs](https://readthedocs.org/).
 
-* [latest snapshot](http://neurom.readthedocs.org/en/latest/)
+* [latest snapshot](http://morphology-documentation.readthedocs.org/en/latest/)
 
 To build the documentation locally clone this repository, and run the following command inside it
 
