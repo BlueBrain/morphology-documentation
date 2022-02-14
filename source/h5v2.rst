@@ -1,0 +1,188 @@
+HDF5 Version 2 Morphology Description (Deprecated)
+==================================================
+
+
+.. warning::
+
+   This format is no longer supported.
+   If you have morphologies in this format, you can convert them to h5v1 with:
+
+   .. code:: bash
+
+             pip install "morphio<2.6" "morph-tool==2.3.0"
+
+
+   and then:
+
+   .. code:: python
+
+             # single file, OUTPUT must end with `.h5`
+             morph-tool convert file INPUTFILE OUTPUT
+
+             # bulk conversion
+             morph-tool convert folder -ext h5 INPUTDIR OUTPUTDIR
+
+Changelog
+---------
+
+- 2.0 Initial format documentation
+
+History
+-------
+
+The `HDF5v2` format was conceived internally to the BBP_ to represent
+morphologies as they proceeded through the morphology repair pipeline.
+
+The following comes from a discussion with Felix Schürmann:
+
+  - The idea was to remove some of the inflexibility that was inherent in the
+    Neurolucida_ ASC version and therefore the `HDF5v1` format.  In addition,
+    the original intent was to allow for keeping a sort of provenance of
+    morphologies.  Thus, the following design decisions were made:
+
+      - New branches get a higher number during repair
+
+      - Keep the ordering of the origial morphology
+
+      - Have separate `HDF5` `DataGroups` for `raw`, `unraveled` and `repaired`
+        for each of the respective stages in the repair process
+
+      - Include metadata for the apical point and cut points.
+
+      - Allow for multiple morphologies in the same file, however, this was
+        never used, and only a single neuron is represented per file.
+
+
+File Format
+-----------
+
+There is a DataGroup rooted in `/` called `neuron1` containing:
+
+
+   - one or more DataGroups of `raw`, `unraveled` or `repaired`
+
+      - in each of these, there is a `points` `HDF5 Datasets`:
+        Much like the HDF5v1 `points` dataset, it is is a 4 column data
+        set composed of floating point numbers representing morphology point
+        locations.  The three columns represent X, Y, and Z position, and
+        the fourth is the Diameter.
+        Implicit, again, is the index of the point, starting at 0.
+
+   - a DataGroup called `structure` which contains two DataSets:
+
+      - A two column dataset called either `raw` or `repaired`, corresponding
+        to whether a `points` DataSet of the same name exists.  This describes
+        how the points are connected.
+
+      - A `sectiontype`, which describes what the type of each section is.
+        This probably follows the same convention as `HDF5v1` does, i.e.
+
+         | `Type`: An integer value with the following meanings:
+         | 1: `soma`, 2: `axon`, 3: `basal dendrite`, 4: `apical dendrite`  .
+         | 3 stands for `dendrite` when there is no distinction between `basal` and `apical`. In that case, 4 is not used.
+
+Finally, there is metadata available:
+
+   - `creator`: The software used to create the morphology.
+   - `version`: An integer, with '2' seemingly suggesting the version of the
+     `HDF5v2`
+   - `apical`: (optional) 2 Floating Points representing the base of the apical arbor.
+     (One is the section number, the other is the number of point in this section?)
+
+::
+
+   ATTRIBUTE "apical" {
+      DATATYPE  H5T_IEEE_F64LE
+      DATASPACE  SIMPLE { ( 2 ) / ( 2 ) }
+      DATA {
+         (0): 170, 199
+      }
+   }
+
+Felix Schürmann comments on the apical point:
+
+::
+
+   [it is] the point at which the apical dendrite of pyramidal cell
+   neuron starts its major bifurcation from its trunk to the distal
+   leaves. Need to keep in mind that it is NOT the first bifurcation
+   (as there are typical minor "oblique" dendrites splicing off the trunk
+   early), but the bifurcation where the trunk more or less splices into
+   two equal diameter pieces. This point is typically annotated by hand,
+   but I believe there are now also automatic detection scripts.
+
+   Note:
+      - not all neurons have this point (e.g. all interneurons do not have it).
+      - the apical point is not referenced by coordinates as it would be not the
+        same when the neuron gets unraveled. To my knowledge it is referenced
+        by section and point ID (to be verified).
+
+Theoretically, the HDF5v2 could look like this:
+
+::
+
+   /                                 Group
+   /neuron1                          Group
+   /neuron1/raw                      Group
+   /neuron1/raw/points               Dataset {10000, 4}
+   /neuron1/repaired                 Group
+   /neuron1/repaired/points          Dataset {12000, 4}
+   /neuron1/repaired                 Group
+   /neuron1/repaired/points          Dataset {12000, 4}
+   /neuron1/unraveled                Group
+   /neuron1/unraveled/points         Dataset {10726, 4}
+   /neuron1/structure                Group
+   /neuron1/structure/raw            Dataset {160, 2}
+   /neuron1/structure/repaired       Dataset {187, 2}
+   /neuron1/structure/sectiontype    Dataset {187, 1}
+
+
+Note: The `/neuron1/structure/unraveled` reuses `/neuron1/structure/raw`
+
+::
+
+   $ repair_20120531_175722/05u_Unraveled$ h5ls -r Fluo6_right.h5
+   /                        Group
+   /neuron1                 Group
+   /neuron1/structure       Group
+   /neuron1/structure/raw   Dataset {175, 2}
+   /neuron1/structure/sectiontype Dataset {175, 1}
+   /neuron1/unraveled       Group
+   /neuron1/unraveled/points Dataset {10726, 4}
+
+Felix Schürmann comments on this:
+
+::
+
+   By design, there are no structural changes to the branching topology of a
+   neuron in the "unravel" step: i.e., "raw" and "unraveled" are expected to have
+   the exact same structure. Branches only get added in the repair step. Thus, to
+   my recollection, it was decided to not have a dedicated structure array for
+   "unraveled". if there is a file with that, it was not written with the SDK
+   file writer...
+
+
+Implementation Notes
+--------------------
+
+From the repair standpoint, it should be noted that each of the `HDF5v2`
+repair stages only write one type of data to the file, as opposed to keeping
+the `raw` data around.
+
+Two notes must be made about the Brion implementation of the `HDF5v2`
+
+1. If a file contains multiple DataGroups, and a specific stage is not
+   requested, the precedence has `repaired` chosen before `unraveled`, which
+   is chosen before `raw`.
+
+2. Also, there exists a work around, so the behavior may be counter-intuitive
+
+.. code-block:: c
+
+    // fixes BBPSDK-295 by restoring old BBPSDK 0.13 implementation
+    if( stage == MORPHOLOGY_UNRAVELED )
+        stage = MORPHOLOGY_RAW;
+
+.. _BBP: http://bluebrain.epfl.ch/
+.. _Neurolucida: http://www.mbfbioscience.com/neurolucida
+
