@@ -6,9 +6,12 @@ This repository contains the documentation of the morphology files formats used 
 To update the documentation, update the rst files located in the source directory.
 To update the version number, modify the "version" entry in package.json
 
-## Build the documentation
+## Documentation
+morphology-documentation is built and hosted on [readthedocs](https://readthedocs.org/).
 
-To build the documentation clone this repository, and run the following command inside it
+* [latest snapshot](http://neurom.readthedocs.org/en/latest/)
+
+To build the documentation locally clone this repository, and run the following command inside it
 
 ```tox -e docs```
 
