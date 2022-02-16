@@ -1,3 +1,5 @@
+![Morphology Documentation Logo](source/logo/BBP-morphology-documentation.jpg)
+
 # Morphology Documentation
 This repository contains the documentation of the morphology files formats used by Blue Brain. The representations divide into two main topological categories:
 * tree-like representation (neurons, astrocytes)
