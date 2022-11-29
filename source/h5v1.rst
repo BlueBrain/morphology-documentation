@@ -53,6 +53,8 @@ The datasets in the root `/` are:
        are duplicated, such that the start point of a child :term:`section` is
        the same as the last point of its parent :term:`section`.
 
+       Note: The points of the soma must be the first points.
+
   - `structure`
      This dataset describes all the :term:`sections<section>`.
      It is composed of 3 columns: `start offset`, `type` and `parent ID`.
@@ -77,6 +79,8 @@ The datasets in the root `/` are:
        For glia cells the values are: 1: `soma`, 2: `glia perivascular process`, 3 `glia process`.
 
        For dendritic spine the values are: 2: `neck`, 3: `head`.
+
+       Note: If there is a soma, it should be given as the first section (the soma must contain only one section).
 
      - `parent index`: The implicit index into the `structure` of the parent.
        For the soma `Type`, it is set to -1, otherwise it must point to a
