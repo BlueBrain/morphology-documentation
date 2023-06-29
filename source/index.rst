@@ -14,5 +14,6 @@ Morphology files formats documentation
    h5v1
    h5v2
    h5-vasc-graph
+   h5-containers
    glossary
 
