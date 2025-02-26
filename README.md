@@ -1,3 +1,7 @@
+> [!WARNING]
+> The Blue Brain Project concluded in December 2024, so development has ceased under the BlueBrain GitHub organization.
+> Future development will take place at: https://github.com/openbraininstitute/morphology-documentation
+
 # Morphology Documentation
 This repository contains the documentation of the morphology files formats used by Blue Brain. The representations divide into two main topological categories:
 * tree-like representation (neurons, astrocytes)
